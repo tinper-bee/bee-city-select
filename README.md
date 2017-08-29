@@ -30,6 +30,7 @@ ReactDom.render(<CitySelect />,document.getElementById('app'));
 
 |参数|说明|类型|默认值|
 |:--|:---:|:--:|---:|
+|className|类名|string|-|
 
 #### 开发调试
 

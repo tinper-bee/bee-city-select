@@ -12,19 +12,7 @@ const CARET = <i className="uf uf-arrow-down"></i>;
 const CARETUP = <i className="uf uf-arrow-up"></i>;
 
 
-/**
-*
-* @title 地区级联
-* @description 中国地区级联
-*
-*/
-class Demo1 extends Component {
-	render () {
-		return (
-			<CitySelect />
-		)
-	}
-}var DemoArray = [{"example":<Demo1 />,"title":" 地区级联","code":"/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\nclass Demo1 extends Component {\n\trender () {\n\t\treturn (\n\t\t\t<CitySelect />\n\t\t)\n\t}\n}","desc":" 中国地区级联"}]
+var Demo1 = require("./demolist/Demo1");var DemoArray = [{"example":<Demo1 />,"title":" 地区级联","code":"/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\n\nimport React, { Component } from 'react';\nimport CitySelect from 'tinper-bee';\n\n\n\trender () {\n\t\treturn (\n\t\t\t<CitySelect />\n\t\t)\n\t}\n}","desc":" 中国地区级联"}]
 
 
 class Demo extends Component {

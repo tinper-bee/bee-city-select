@@ -4,7 +4,11 @@
 * @description 中国地区级联
 *
 */
-class Demo1 extends Component {
+
+import React, { Component } from 'react';
+import CitySelect from '../../src';
+
+export default class Demo1 extends Component {
 	render () {
 		return (
 			<CitySelect />
