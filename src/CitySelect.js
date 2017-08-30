@@ -937,7 +937,7 @@ export default class CitySelect extends Component {
 	handleCityChange(value) {
 		let provinceIndex = this.state.provinceIndex;
 	    this.setState({
-	      secondCity: provinceData[value].city[value].name,
+	      secondCity: provinceData[provinceIndex].city[value].name,
 	      areas: provinceData[provinceIndex].city[value].area,
       	  secondArea: provinceData[provinceIndex].city[value].area[0],
       	  cityIndex : value
