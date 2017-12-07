@@ -1,8 +1,9 @@
 
 import React, {Component} from 'react';
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Select from 'bee-select';	
+import Select from 'bee-select';
+import findIndex from 'lodash.findindex';	
 
 const provinceData = [
 
@@ -909,11 +910,19 @@ const provinceData = [
     ]}
 
 ];
-
-export default class CitySelect extends Component {
+const propTypes={
+    defaultValue:PropTypes.object,//{ province:'北京',city:'北京',area:'东城区'}
+    onChange:PropTypes.func
+}
+const defaultProps={
+    defaultValue:{ province:'北京',city:'北京',area:'东城区'},
+    onChange:()=>{}
+}
+class CitySelect extends Component {
 	constructor() {
 		super();
 		this.state = {
+            province:'北京',
 			provinceIndex: 0,
 			cityIndex: 0,
 			cities: provinceData[0].city,
@@ -921,42 +930,88 @@ export default class CitySelect extends Component {
       		areas: provinceData[0].city[0].area,
       		secondArea: provinceData[0].city[0].area[0],
 		}
-		this.handleProvinceChange = this.handleProvinceChange.bind(this);
-		this.handleCityChange = this.handleCityChange.bind(this);
-		this.onSecondAreaChange = this.onSecondAreaChange.bind(this);
-	}
-	handleProvinceChange(value) {
+    }
+    componentDidMount(){
+        let defaultValue=this.props.defaultValue;
+        let province=defaultValue.province;
+        let provinceIndex=this.getIndex('province',defaultValue.province);
+        let cityIndex=this.getIndex('city',defaultValue.city,provinceIndex);
+        let cities=provinceData[provinceIndex].city;
+        let secondCity=defaultValue.city;
+        let areas=cities[cityIndex].area;
+        let secondArea=defaultValue.area;
+        this.setState({
+            province,
+            provinceIndex,
+            cityIndex,
+            cities,
+            secondCity:secondCity,
+            areas,
+            secondArea
+        })
+    }
+    getIndex=(type,name,provinceIndex)=>{
+        let provinceI=provinceIndex||this.state.provinceIndex;
+        switch (type){
+            case 'province':
+            return findIndex(provinceData, function(province) {
+                return province.name == name;
+            });
+            break;
+            case 'city':
+            return findIndex(provinceData[provinceI].city, function(city) {
+                return city.name == name;
+            });
+            break;
+        }
+    }
+	handleProvinceChange=(value)=> {
+        let index=this.getIndex('province',value);
+        let city=provinceData[index].city[0].name;
+        let area=provinceData[index].city[0].area[0];
 	    this.setState({
-	      cities: provinceData[value].city,
-	      secondCity: provinceData[value].city[0].name,
-      	  provinceIndex : value,
-      	  areas: provinceData[value].city[0].area,
-      	  secondArea: provinceData[value].city[0].area[0],
-	    });
+          province:value,
+	      cities: provinceData[index].city,
+	      secondCity: city,
+      	  provinceIndex : index,
+      	  areas: provinceData[index].city[0].area,
+      	  secondArea: area,
+        });
+        this.onChange(value,city,area)
 	}
-	handleCityChange(value) {
-		let provinceIndex = this.state.provinceIndex;
+	handleCityChange=(value)=> {
+        let index=this.getIndex('city',value);
+        let provinceIndex = this.state.provinceIndex;
+        let area=provinceData[provinceIndex].city[index].area[0];
 	    this.setState({
-	      secondCity: provinceData[provinceIndex].city[value].name,
-	      areas: provinceData[provinceIndex].city[value].area,
-      	  secondArea: provinceData[provinceIndex].city[value].area[0],
+	      secondCity: provinceData[provinceIndex].city[index].name,
+	      areas: provinceData[provinceIndex].city[index].area,
+      	  secondArea: area,
       	  cityIndex : value
-	    });
+        });
+        this.onChange(undefined,value,area);
 	}
-	onSecondAreaChange(value) {
+	onSecondAreaChange=(value)=> {
 	    this.setState({
 	      secondArea: value,
-	    });
-	}
+        });
+        this.onChange(undefined,undefined,value);
+    }
+    onChange=(province,city,area)=>{
+        this.props.onChange({
+            province:province||this.state.province,
+            city:city||this.state.secondCity,
+            area:area
+        })
+    }
 	render() {
-	    const provinceOptions = provinceData.map((province,index) => <Option key={index}>{province.name}</Option>);
-	    const cityOptions = this.state.cities.map((city,index) => <Option key={index}>{city.name}</Option>);
-	    const areaOptions = this.state.areas.map((area,index) => <Option key={index}>{area}</Option>);
-	    
+	    const provinceOptions = provinceData.map((province,index) => <Option key={province.name}>{province.name}</Option>);
+	    const cityOptions = this.state.cities.map((city,index) => <Option key={city.name}>{city.name}</Option>);
+	    const areaOptions = this.state.areas.map((area,index) => <Option key={area}>{area}</Option>);
 	    return (
 	      <div className="u-city-select">
 	        <Select 
-                defaultValue={provinceData[0].city[0].name} 
+                value={this.state.province} 
                 className="province" 
                 onChange={this.handleProvinceChange}>
 	          {provinceOptions}
@@ -978,3 +1033,6 @@ export default class CitySelect extends Component {
 	    );
 	}
 }
+CitySelect.propTypes = propTypes;
+CitySelect.defaultProps = defaultProps;
+export default CitySelect;

@@ -6,12 +6,17 @@
 */
 
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import CitySelect from '../../src';
 
-export default class Demo1 extends Component {
+class Demo1 extends Component {
+	onChange=(obj)=>{
+		console.log(obj)
+	}
 	render () {
 		return (
-			<CitySelect />
+			<CitySelect ref='city' onChange={this.onChange} />
 		)
 	}
 }
+export default Demo1;
