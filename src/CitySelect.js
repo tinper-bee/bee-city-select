@@ -1009,7 +1009,7 @@ class CitySelect extends Component {
 	    const cityOptions = this.state.cities.map((city,index) => <Option key={city.name}>{city.name}</Option>);
 	    const areaOptions = this.state.areas.map((area,index) => <Option key={area}>{area}</Option>);
 	    return (
-	      <div className="u-city-select">
+	      <div className={classNames("u-city-select",this.props.className)}>
 	        <Select 
                 value={this.state.province} 
                 className="province" 

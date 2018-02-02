@@ -12,7 +12,7 @@ const CARET = <i className="uf uf-arrow-down"></i>;
 const CARETUP = <i className="uf uf-arrow-up"></i>;
 
 
-var Demo1 = require("./demolist/Demo1");var DemoArray = [{"example":<Demo1 />,"title":" 地区级联","code":"/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\n\nimport React, { Component } from 'react';\nimport ReactDOM from 'react-dom';\nimport CitySelect from 'bee-city-select';\n\nclass Demo1 extends Component {\n\tonChange=(obj)=>{\n\t\tconsole.log(obj)\n\t}\n\trender () {\n\t\treturn (\n\t\t\t<CitySelect ref='city' onChange={this.onChange} />\n\t\t)\n\t}\n}\n","desc":" 中国地区级联"}]
+var Demo1 = require("./demolist/Demo1");var DemoArray = [{"example":<Demo1 />,"title":" 地区级联","code":"/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\n\nimport React, { Component } from 'react';\nimport ReactDOM from 'react-dom';\nimport { CitySelect } from 'tinper-bee';\n\nclass Demo1 extends Component {\n\tonChange=(obj)=>{\n\t\tconsole.log(obj)\n\t}\n\trender () {\n\t\treturn (\n\t\t\t<CitySelect ref='city' onChange={this.onChange} />\n\t\t)\n\t}\n}\n","desc":" 中国地区级联"}]
 
 
 class Demo extends Component {
