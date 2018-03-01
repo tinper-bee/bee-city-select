@@ -15,7 +15,8 @@ class Demo1 extends Component {
 	constructor() {
 		super();
 		this.state = {
-			defaultValue:{ province:'北京',city:'北京',area:'东城区'}
+			defaultValue:{ province:'北京',city:'北京',area:'东城区'},
+			value:null
 		}
 	}
 
@@ -25,14 +26,14 @@ class Demo1 extends Component {
 
 	btnOnClick=()=>{
 		this.setState({
-			defaultValue:{ province:'山西',city:'长治',area:'长治县'}
+			value:{ province:'山西',city:'长治',area:'长治县'}
 		})
 	}
 
 	render () {
 		return (
 			<div>
-				<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} />
+				<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} value={this.state.value}/>
 				<Button shape="border" onClick={this.btnOnClick} style={{marginTop:"10px"}}>代码设置数据</Button>
 			</div>
 	)}

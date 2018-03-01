@@ -912,10 +912,12 @@ const provinceData = [
 ];
 const propTypes={
     defaultValue:PropTypes.object,//{ province:'北京',city:'北京',area:'东城区'}
+    value:PropTypes.object,//{ province:'北京',city:'北京',area:'东城区'}
     onChange:PropTypes.func
 }
 const defaultProps={
     defaultValue:{ province:'北京',city:'北京',area:'东城区'},
+    value:null,
     onChange:()=>{}
 }
 class CitySelect extends Component {
@@ -932,7 +934,8 @@ class CitySelect extends Component {
 		}
     }
     componentDidMount(){
-        let defaultValue=this.props.defaultValue;
+        const {defaultValue:_defaultValue,value} = this.props;
+        let defaultValue=value?value:_defaultValue;
         let province=defaultValue.province;
         let provinceIndex=this.getIndex('province',defaultValue.province);
         let cityIndex=this.getIndex('city',defaultValue.city,provinceIndex);
@@ -952,7 +955,7 @@ class CitySelect extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        const {province,city,area} = nextProps.defaultValue;
+        const {province,city,area} = nextProps.value;
         this.setState({
             province,
             secondCity:city,
