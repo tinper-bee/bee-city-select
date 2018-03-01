@@ -955,6 +955,7 @@ class CitySelect extends Component {
     }
 
     componentWillReceiveProps(nextProps){
+        if(!nextProps.value)return;
         const {province,city,area} = nextProps.value;
         this.setState({
             province,

@@ -31,9 +31,10 @@ class Demo1 extends Component {
 	}
 
 	render () {
+		let 	value = { province:'山西',city:'长治',area:'长治县'};
 		return (
 			<div>
-				<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} value={this.state.value}/>
+				<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} value={value}/>
 				<Button shape="border" onClick={this.btnOnClick} style={{marginTop:"10px"}}>代码设置数据</Button>
 			</div>
 	)}
