@@ -950,6 +950,17 @@ class CitySelect extends Component {
             secondArea
         })
     }
+
+    componentWillReceiveProps(nextProps){
+        const {province,city,area} = nextProps.defaultValue;
+        this.setState({
+            province,
+            secondCity:city,
+            secondArea:area
+        })
+        this.handleProvinceChange(province);
+    }
+
     getIndex=(type,name,provinceIndex)=>{
         let provinceI=provinceIndex||this.state.provinceIndex;
         switch (type){
@@ -1004,6 +1015,7 @@ class CitySelect extends Component {
             area:area
         })
     }
+    
 	render() {
 	    const provinceOptions = provinceData.map((province,index) => <Option key={province.name}>{province.name}</Option>);
 	    const cityOptions = this.state.cities.map((city,index) => <Option key={city.name}>{city.name}</Option>);

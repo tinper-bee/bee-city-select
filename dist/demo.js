@@ -80,7 +80,7 @@
 	
 	var CARETUP = _react2['default'].createElement('i', { className: 'uf uf-arrow-up' });
 	
-	var Demo1 = __webpack_require__(106);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " 地区级联", "code": "/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\n\nimport React, { Component } from 'react';\nimport ReactDOM from 'react-dom';\nimport { CitySelect } from 'tinper-bee';\n\nclass Demo1 extends Component {\n\tonChange=(obj)=>{\n\t\tconsole.log(obj)\n\t}\n\trender () {\n\t\treturn (\n\t\t\t<CitySelect ref='city' onChange={this.onChange} />\n\t\t)\n\t}\n}\n", "desc": " 中国地区级联" }];
+	var Demo1 = __webpack_require__(106);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " 地区级联", "code": "/**\n*\n* @title 地区级联\n* @description 中国地区级联\n*\n*/\n\nimport React, { Component } from 'react';\nimport ReactDOM from 'react-dom';\nimport { CitySelect, Button } from 'tinper-bee';\n\nclass Demo1 extends Component {\n\n\tconstructor() {\n\t\tsuper();\n\t\tthis.state = {\n\t\t\tdefaultValue:{ province:'北京',city:'北京',area:'东城区'}\n\t\t}\n\t}\n\n\tonChange=(obj)=>{\n\t\tconsole.log(obj)\n\t}\n\n\tbtnOnClick=()=>{\n\t\tthis.setState({\n\t\t\tdefaultValue:{ province:'山西',city:'长治',area:'长治县'}\n\t\t})\n\t}\n\n\trender () {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} />\n\t\t\t\t<Button shape=\"border\" onClick={this.btnOnClick} style={{marginTop:\"10px\"}}>代码设置数据</Button>\n\t\t\t</div>\n\t)}\n}\n", "desc": " 中国地区级联" }];
 	
 	var Demo = function (_Component) {
 	    _inherits(Demo, _Component);
@@ -4586,18 +4586,12 @@
 	      elFuturePos = (0, _getElFuturePos2['default'])(elRegion, refNodeRegion, points, offset, targetOffset);
 	      _utils2['default'].mix(newElRegion, elFuturePos);
 	    }
-	    var isStillFailX = isFailX(elFuturePos, elRegion, visibleRect);
-	    var isStillFailY = isFailY(elFuturePos, elRegion, visibleRect);
-	    // 检查反下后的位置是否可以放下了，如果仍然放不下：
-	    // 1. 复原修改过的定位参数
-	    if (isStillFailX || isStillFailY) {
-	      points = align.points;
-	      offset = align.offset || [0, 0];
-	      targetOffset = align.targetOffset || [0, 0];
-	    }
-	    // 2. 只有指定了可以调整当前方向才调整
-	    newOverflowCfg.adjustX = overflow.adjustX && isStillFailX;
-	    newOverflowCfg.adjustY = overflow.adjustY && isStillFailY;
+	
+	    // 检查反下后的位置是否可以放下了
+	    // 如果仍然放不下只有指定了可以调整当前方向才调整
+	    newOverflowCfg.adjustX = overflow.adjustX && isFailX(elFuturePos, elRegion, visibleRect);
+	
+	    newOverflowCfg.adjustY = overflow.adjustY && isFailY(elFuturePos, elRegion, visibleRect);
 	
 	    // 确实要调整，甚至可能会调整高度宽度
 	    if (newOverflowCfg.adjustX || newOverflowCfg.adjustY) {
@@ -4668,12 +4662,8 @@
 	
 	var getComputedStyleX = void 0;
 	
-	// https://stackoverflow.com/a/3485654/3040605
-	function forceRelayout(elem) {
-	  var originalStyle = elem.style.display;
-	  elem.style.display = 'none';
-	  elem.offsetHeight; // eslint-disable-line
-	  elem.style.display = originalStyle;
+	function force(x, y) {
+	  return x + y;
 	}
 	
 	function css(el, name, v) {
@@ -4908,8 +4898,6 @@
 	    elem.style[oppositeVerticalProperty] = '';
 	    elem.style[verticalProperty] = presetV + 'px';
 	  }
-	  // force relayout
-	  forceRelayout(elem);
 	  var old = getOffset(elem);
 	  var originalStyle = {};
 	  for (var key in offset) {
@@ -4926,7 +4914,7 @@
 	  }
 	  css(elem, originalStyle);
 	  // force relayout
-	  forceRelayout(elem);
+	  force(elem.offsetTop, elem.offsetLeft);
 	  if ('left' in offset || 'top' in offset) {
 	    (0, _propertyUtils.setTransitionProperty)(elem, originalTransition);
 	  }
@@ -6349,6 +6337,20 @@
 	            areas: areas,
 	            secondArea: secondArea
 	        });
+	    };
+	
+	    CitySelect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	        var _nextProps$defaultVal = nextProps.defaultValue,
+	            province = _nextProps$defaultVal.province,
+	            city = _nextProps$defaultVal.city,
+	            area = _nextProps$defaultVal.area;
+	
+	        this.setState({
+	            province: province,
+	            secondCity: city,
+	            secondArea: area
+	        });
+	        this.handleProvinceChange(province);
 	    };
 	
 	    CitySelect.prototype.render = function render() {
@@ -7934,7 +7936,6 @@
 	    _this.state = {
 	      openKeys: []
 	    };
-	    _this.rcMenu = {};
 	    return _this;
 	  }
 	
@@ -7954,8 +7955,6 @@
 	  };
 	
 	  Menu.prototype.render = function render() {
-	    var _this2 = this;
-	
 	    var openAnimation = this.props.openAnimation || this.props.openTransitionName;
 	    if (!openAnimation) {
 	      switch (this.props.mode) {
@@ -7998,9 +7997,7 @@
 	        className: className
 	      };
 	    }
-	    return _react2["default"].createElement(_ExportMenu2["default"], _extends({ ref: function ref(el) {
-	        return _this2.rcMenu = el;
-	      } }, this.props, props));
+	    return _react2["default"].createElement(_ExportMenu2["default"], _extends({}, this.props, props));
 	  };
 	
 	  return Menu;
@@ -8678,6 +8675,12 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _tinperBeeCore = __webpack_require__(26);
+	
+	var _warning = __webpack_require__(31);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	function noop() {}
@@ -8820,9 +8823,7 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _keyCode = __webpack_require__(37);
-	
-	var _keyCode2 = _interopRequireDefault(_keyCode);
+	var _tinperBeeCore = __webpack_require__(26);
 	
 	var _classnames = __webpack_require__(3);
 	
@@ -8950,7 +8951,7 @@
 	    var menu = this.menuInstance;
 	    var isOpen = this.isOpen();
 	
-	    if (keyCode === _keyCode2["default"].ENTER) {
+	    if (keyCode === _tinperBeeCore.KeyCode.ENTER) {
 	      this.onTitleClick(e);
 	      this.setState({
 	        defaultActiveFirst: true
@@ -8958,7 +8959,7 @@
 	      return true;
 	    }
 	
-	    if (keyCode === _keyCode2["default"].RIGHT) {
+	    if (keyCode === _tinperBeeCore.KeyCode.RIGHT) {
 	      if (isOpen) {
 	        menu.onKeyDown(e);
 	      } else {
@@ -8969,7 +8970,7 @@
 	      }
 	      return true;
 	    }
-	    if (keyCode === _keyCode2["default"].LEFT) {
+	    if (keyCode === _tinperBeeCore.KeyCode.LEFT) {
 	      var handled = void 0;
 	      if (isOpen) {
 	        handled = menu.onKeyDown(e);
@@ -8983,7 +8984,7 @@
 	      return handled;
 	    }
 	
-	    if (isOpen && (keyCode === _keyCode2["default"].UP || keyCode === _keyCode2["default"].DOWN)) {
+	    if (isOpen && (keyCode === _tinperBeeCore.KeyCode.UP || keyCode === _tinperBeeCore.KeyCode.DOWN)) {
 	      return menu.onKeyDown(e);
 	    }
 	  };
@@ -9365,9 +9366,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _createChainedFunction = __webpack_require__(36);
-	
-	var _createChainedFunction2 = _interopRequireDefault(_createChainedFunction);
+	var _tinperBeeCore = __webpack_require__(26);
 	
 	var _util = __webpack_require__(73);
 	
@@ -9435,6 +9434,7 @@
 	  }
 	}
 	
+	//import Animate from 'bee-transition';
 	var propTypes = {
 	  onSelect: _propTypes2["default"].func,
 	  onClick: _propTypes2["default"].func,
@@ -9593,7 +9593,7 @@
 	      rootPrefixCls: props.prefixCls,
 	      index: i,
 	      parentMenu: this,
-	      ref: childProps.disabled ? undefined : (0, _createChainedFunction2["default"])(child.ref, saveRef.bind(this, i, subIndex)),
+	      ref: childProps.disabled ? undefined : (0, _tinperBeeCore.createChainedFunction)(child.ref, saveRef.bind(this, i, subIndex)),
 	      eventKey: key,
 	      closeSubMenuOnMouseLeave: props.closeSubMenuOnMouseLeave,
 	      onItemHover: this.onItemHover,
@@ -10424,9 +10424,7 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _keyCode = __webpack_require__(37);
-	
-	var _keyCode2 = _interopRequireDefault(_keyCode);
+	var _tinperBeeCore = __webpack_require__(26);
 	
 	var _classnames = __webpack_require__(3);
 	
@@ -10507,7 +10505,7 @@
 	
 	  MenuItem.prototype.onKeyDown = function onKeyDown(e) {
 	    var keyCode = e.keyCode;
-	    if (keyCode === _keyCode2["default"].ENTER) {
+	    if (keyCode === _tinperBeeCore.KeyCode.ENTER) {
 	      this.onClick(e);
 	      return true;
 	    }
@@ -10922,9 +10920,7 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _createChainedFunction = __webpack_require__(36);
-	
-	var _createChainedFunction2 = _interopRequireDefault(_createChainedFunction);
+	var _tinperBeeCore = __webpack_require__(26);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -10998,7 +10994,7 @@
 	    var buttonProps = _extends({
 	      type: 'button'
 	    }, props, {
-	      onClick: (0, _createChainedFunction2["default"])(onClick, this.handleClick.bind(this)),
+	      onClick: (0, _tinperBeeCore.createChainedFunction)(onClick, this.handleClick.bind(this)),
 	      className: (0, _classnames2["default"])(className, clsPrefix, show && 'show')
 	      //!this.context.u_navbar.expanded && 'collapsed',
 	    });
@@ -11837,10 +11833,6 @@
 	      this.clickOutsideHandler = null;
 	      this.touchOutsideHandler = null;
 	    }
-	    if (this._container) {
-	      _reactDom2["default"].unmountComponentAtNode(this._container);
-	    }
-	
 	    //this.removeContainer();
 	  };
 	
@@ -15961,6 +15953,10 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _beeButton = __webpack_require__(62);
+	
+	var _beeButton2 = _interopRequireDefault(_beeButton);
+	
 	var _src = __webpack_require__(64);
 	
 	var _src2 = _interopRequireDefault(_src);
@@ -15984,21 +15980,37 @@
 		_inherits(Demo1, _Component);
 	
 		function Demo1() {
-			var _temp, _this, _ret;
-	
 			_classCallCheck(this, Demo1);
 	
-			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-				args[_key] = arguments[_key];
-			}
+			var _this = _possibleConstructorReturn(this, _Component.call(this));
 	
-			return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.onChange = function (obj) {
+			_this.onChange = function (obj) {
 				console.log(obj);
-			}, _temp), _possibleConstructorReturn(_this, _ret);
+			};
+	
+			_this.btnOnClick = function () {
+				_this.setState({
+					defaultValue: { province: '山西', city: '长治', area: '长治县' }
+				});
+			};
+	
+			_this.state = {
+				defaultValue: { province: '北京', city: '北京', area: '东城区' }
+			};
+			return _this;
 		}
 	
 		Demo1.prototype.render = function render() {
-			return _react2['default'].createElement(_src2['default'], { ref: 'city', onChange: this.onChange });
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(_src2['default'], { ref: 'city', onChange: this.onChange, defaultValue: this.state.defaultValue }),
+				_react2['default'].createElement(
+					_beeButton2['default'],
+					{ shape: 'border', onClick: this.btnOnClick, style: { marginTop: "10px" } },
+					'\u4EE3\u7801\u8BBE\u7F6E\u6570\u636E'
+				)
+			);
 		};
 	
 		return Demo1;
