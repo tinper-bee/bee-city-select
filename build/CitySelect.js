@@ -150,6 +150,7 @@ var CitySelect = function (_Component) {
     };
 
     CitySelect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+        if (!nextProps.value) return;
         var _nextProps$value = nextProps.value,
             province = _nextProps$value.province,
             city = _nextProps$value.city,
