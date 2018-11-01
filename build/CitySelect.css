@@ -625,7 +625,7 @@ ul {
     zoom: 1; }
     .u-select .u-select-arrow:before {
       display: block;
-      font-family: "uf" !important;
+      font-family: "uf";
       content: "\e609";
       -webkit-transition: -webkit-transform 0.2s ease;
       transition: -webkit-transform 0.2s ease;
@@ -839,7 +839,7 @@ ul {
     width: auto;
     padding: 0; }
     .u-select-selection--multiple .u-select-search--inline .u-select-search-field {
-      width: 0.75em !important; }
+      width: 0.75em; }
   .u-select-selection--multiple .u-select-selection-rendered {
     margin-left: 5px;
     margin-bottom: -3px;
@@ -901,7 +901,7 @@ ul {
     padding: 0 0 0 8px; }
   .u-select-selection--multiple .u-select-selection-choice-remove:before {
     display: block;
-    font-family: "uf" !important; }
+    font-family: "uf"; }
   .u-select-selection--multiple .u-select-selection-choice-remove {
     -webkit-filter: none;
     filter: none; }
@@ -910,7 +910,7 @@ ul {
   .u-select-selection--multiple .u-select-selection-choice-remove:hover {
     color: #404040; }
   .u-select-selection--multiple .u-select-selection-choice-remove:before {
-    font-family: 'uf' !important;
+    font-family: 'uf';
     content: "\e602"; }
 
 .u-select-open .u-select-arrow {
@@ -954,15 +954,13 @@ ul {
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   box-sizing: border-box;
-  z-index: 1050;
+  z-index: 1800;
   left: -9999px;
   top: -9999px;
   position: absolute;
   outline: none;
   overflow: hidden;
-  font-size: 12px;
-  -webkit-animation: moveFromTop 300ms ease-in;
-  animation: uSlideUpIn 300ms ease; }
+  font-size: 12px; }
   .u-select-dropdown.slide-up-enter.slide-up-enter-active.u-select-dropdown-placement-bottomLeft, .u-select-dropdown.slide-up-appear.slide-up-appear-active.u-select-dropdown-placement-bottomLeft {
     -webkit-animation-name: uSlideUpIn;
     animation-name: uSlideUpIn; }
@@ -1003,7 +1001,10 @@ ul {
     white-space: nowrap;
     overflow: hidden;
     -webkit-transition: background 0.3s ease;
-    transition: background 0.3s ease; }
+    transition: background 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
   .u-select-dropdown .u-select-dropdown-menu-item:hover,
   .u-select-dropdown .u-select-dropdown-menu-item-active {
     background-color: #e7f4fd; }
