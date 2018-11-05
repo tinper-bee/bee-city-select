@@ -31,7 +31,7 @@ class Demo1 extends Component {
 	}
 
 	render () {
-		let 	value = { province:'山西',city:'长治',area:'长治县'};
+		let value = { province:'山西',city:'长治',area:'长治县'};
 		return (
 			<div>
 				<CitySelect ref='city' onChange={this.onChange} defaultValue={this.state.defaultValue} value={value}/>

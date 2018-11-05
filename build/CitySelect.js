@@ -26,8 +26,6 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _provinceData = require('./provinceData');
 
-var _provinceData2 = _interopRequireDefault(_provinceData);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -39,16 +37,18 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 
 var propTypes = {
-    defaultValue: _propTypes2["default"].object, //{ province:'北京',city:'北京',area:'东城区'}
-    value: _propTypes2["default"].object, //{ province:'北京',city:'北京',area:'东城区'}
+    defaultValue: _propTypes2["default"].object,
+    value: _propTypes2["default"].object,
     onChange: _propTypes2["default"].func,
-    provinceData: _propTypes2["default"].array
+    provinceData: _propTypes2["default"].array,
+    lang: _propTypes2["default"].string
 };
 var defaultProps = {
-    defaultValue: { province: '北京', city: '北京', area: '东城区' },
+    defaultValue: _provinceData.zh.defaultValue,
     value: null,
     onChange: function onChange() {},
-    provinceData: _provinceData2["default"]
+    provinceData: _provinceData.zh.provinceData,
+    lang: 'zh_CN'
 };
 
 var CitySelect = function (_Component) {
@@ -62,10 +62,16 @@ var CitySelect = function (_Component) {
         _initialiseProps.call(_this);
 
         var provinceData = props.provinceData;
+        if (props.lang == 'zh_TW') {
+            provinceData = _provinceData.tw.provinceData;
+        } else if (props.lang == 'en_US') {
+            provinceData = _provinceData.en.provinceData;
+        }
         _this.state = {
             province: '北京',
             provinceIndex: 0,
             cityIndex: 0,
+            provinceData: provinceData,
             cities: provinceData[0].city,
             secondCity: provinceData[0].city[0].name,
             areas: provinceData[0].city[0].area,
@@ -78,8 +84,16 @@ var CitySelect = function (_Component) {
         var _props = this.props,
             _defaultValue = _props.defaultValue,
             value = _props.value,
-            provinceData = _props.provinceData;
+            lang = _props.lang;
 
+        var provinceData = this.state.provinceData;
+        if (lang == 'zh_TW') {
+            provinceData = _provinceData.tw.provinceData;
+            _defaultValue = _provinceData.tw.defaultValue;
+        } else if (lang == 'en_US') {
+            provinceData = _provinceData.en.provinceData;
+            _defaultValue = _provinceData.en.defaultValue;
+        }
         var defaultValue = value ? value : _defaultValue;
         var province = defaultValue.province;
         var provinceIndex = this.getIndex('province', defaultValue.province);
@@ -95,7 +109,8 @@ var CitySelect = function (_Component) {
             cities: cities,
             secondCity: secondCity,
             areas: areas,
-            secondArea: secondArea
+            secondArea: secondArea,
+            provinceData: provinceData
         });
     };
 
@@ -115,7 +130,7 @@ var CitySelect = function (_Component) {
     };
 
     CitySelect.prototype.render = function render() {
-        var provinceOptions = this.props.provinceData.map(function (province, index) {
+        var provinceOptions = this.state.provinceData.map(function (province, index) {
             return _react2["default"].createElement(
                 Option,
                 { key: province.name },
@@ -173,7 +188,7 @@ var _initialiseProps = function _initialiseProps() {
     var _this2 = this;
 
     this.getIndex = function (type, name, provinceIndex) {
-        var provinceData = _this2.props.provinceData;
+        var provinceData = _this2.state.provinceData;
         var provinceI = provinceIndex || _this2.state.provinceIndex;
         switch (type) {
             case 'province':
@@ -190,7 +205,7 @@ var _initialiseProps = function _initialiseProps() {
     };
 
     this.handleProvinceChange = function (value) {
-        var provinceData = _this2.props.provinceData;
+        var provinceData = _this2.state.provinceData;
         var index = _this2.getIndex('province', value);
         var city = provinceData[index].city[0].name;
         var area = provinceData[index].city[0].area[0];
@@ -206,7 +221,7 @@ var _initialiseProps = function _initialiseProps() {
     };
 
     this.handleCityChange = function (value) {
-        var provinceData = _this2.props.provinceData;
+        var provinceData = _this2.state.provinceData;
         var index = _this2.getIndex('city', value);
         var provinceIndex = _this2.state.provinceIndex;
         var area = provinceData[provinceIndex].city[index].area[0];

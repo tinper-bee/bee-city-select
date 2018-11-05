@@ -4,28 +4,36 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Select from 'bee-select';
 import findIndex from 'lodash.findindex';	
-import provinceD from './provinceData'
+import { zh, en, tw } from './provinceData'
 
 const propTypes={
-    defaultValue:PropTypes.object,//{ province:'北京',city:'北京',area:'东城区'}
-    value:PropTypes.object,//{ province:'北京',city:'北京',area:'东城区'}
+    defaultValue:PropTypes.object,
+    value:PropTypes.object,
     onChange:PropTypes.func,
-    provinceData:PropTypes.array
+    provinceData:PropTypes.array,
+    lang:PropTypes.string
 }
 const defaultProps={
-    defaultValue:{ province:'北京',city:'北京',area:'东城区'},
+    defaultValue:zh.defaultValue,
     value:null,
     onChange:()=>{},
-    provinceData:provinceD
+    provinceData:zh.provinceData,
+    lang:'zh_CN'
 }
 class CitySelect extends Component {
 	constructor(props) {
         super(props);
         let provinceData = props.provinceData;
+        if(props.lang == 'zh_TW'){
+            provinceData = tw.provinceData;
+        }else if(props.lang == 'en_US'){
+            provinceData = en.provinceData
+        }
 		this.state = {
             province:'北京',
 			provinceIndex: 0,
-			cityIndex: 0,
+            cityIndex: 0,
+            provinceData:provinceData,
 			cities: provinceData[0].city,
       		secondCity: provinceData[0].city[0].name,
       		areas: provinceData[0].city[0].area,
@@ -33,7 +41,15 @@ class CitySelect extends Component {
 		}
     }
     componentDidMount(){
-        const {defaultValue:_defaultValue,value,provinceData} = this.props;
+        let {defaultValue:_defaultValue,value,lang} = this.props;
+        let provinceData = this.state.provinceData;
+        if(lang == 'zh_TW'){
+            provinceData = tw.provinceData;
+            _defaultValue = tw.defaultValue;
+        }else if(lang == 'en_US'){
+            provinceData = en.provinceData
+            _defaultValue = en.defaultValue;
+        }
         let defaultValue=value?value:_defaultValue;
         let province=defaultValue.province;
         let provinceIndex=this.getIndex('province',defaultValue.province);
@@ -49,7 +65,8 @@ class CitySelect extends Component {
             cities,
             secondCity:secondCity,
             areas,
-            secondArea
+            secondArea,
+            provinceData
         })
     }
 
@@ -65,7 +82,7 @@ class CitySelect extends Component {
     }
 
     getIndex=(type,name,provinceIndex)=>{
-        let provinceData = this.props.provinceData;
+        let provinceData = this.state.provinceData;
         let provinceI=provinceIndex||this.state.provinceIndex;
         switch (type){
             case 'province':
@@ -81,7 +98,7 @@ class CitySelect extends Component {
         }
     }
 	handleProvinceChange=(value)=> {
-        let provinceData = this.props.provinceData;
+        let provinceData = this.state.provinceData;
         let index=this.getIndex('province',value);
         let city=provinceData[index].city[0].name;
         let area=provinceData[index].city[0].area[0];
@@ -96,7 +113,7 @@ class CitySelect extends Component {
         this.onChange(value,city,area)
 	}
 	handleCityChange=(value)=> {
-        let provinceData = this.props.provinceData;
+        let provinceData = this.state.provinceData;
         let index=this.getIndex('city',value);
         let provinceIndex = this.state.provinceIndex;
         let area=provinceData[provinceIndex].city[index].area[0];
@@ -123,7 +140,7 @@ class CitySelect extends Component {
     }
     
 	render() {
-	    const provinceOptions = this.props.provinceData.map((province,index) => <Option key={province.name}>{province.name}</Option>);
+	    const provinceOptions = this.state.provinceData.map((province,index) => <Option key={province.name}>{province.name}</Option>);
 	    const cityOptions = this.state.cities.map((city,index) => <Option key={city.name}>{city.name}</Option>);
 	    const areaOptions = this.state.areas.map((area,index) => <Option key={area}>{area}</Option>);
 	    return (
