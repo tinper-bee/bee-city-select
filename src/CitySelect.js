@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Select from 'bee-select';
 import findIndex from 'lodash.findindex';	
-import { zh, en, tw } from './provinceData'
+import { zh, en, tw } from './provinceData';
+const Option = Select.Option;
 
 const propTypes={
     defaultValue:PropTypes.object,
