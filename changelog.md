@@ -1,3 +1,12 @@
+## [2.0.3](https://github.com/tinper-bee/bee-city-select/compare/v2.0.2...v2.0.3) (2020-07-02)
+
+
+### Features
+
+* options 加 title ([7b77b64](https://github.com/tinper-bee/bee-city-select/commit/7b77b64953da1d063682b1b28128498fd58f633f))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/tinper-bee/bee-city-select/compare/v1.0.11...v2.0.1) (2019-03-19)
 
