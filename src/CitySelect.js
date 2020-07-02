@@ -141,9 +141,9 @@ class CitySelect extends Component {
     }
     
 	render() {
-	    const provinceOptions = this.state.provinceData.map((province,index) => <Option key={province.name}>{province.name}</Option>);
-	    const cityOptions = this.state.cities.map((city,index) => <Option key={city.name}>{city.name}</Option>);
-	    const areaOptions = this.state.areas.map((area,index) => <Option key={area}>{area}</Option>);
+	    const provinceOptions = this.state.provinceData.map((province,index) => <Option title={province.name} key={province.name}>{province.name}</Option>);
+	    const cityOptions = this.state.cities.map((city,index) => <Option title={city.name} key={city.name}>{city.name}</Option>);
+	    const areaOptions = this.state.areas.map((area,index) => <Option title={area} key={area}>{area}</Option>);
 	    return (
 	      <div className={classNames("u-city-select",this.props.className)}>
 	        <Select 
